@@ -2,57 +2,51 @@ import { memo } from 'react';
 import { Link } from 'react-router-dom';
 
 import '../cssfile/productlistpanel.css';
+import { LoadingDiv } from '../pages/LoadingPage';
 
 const ProductListLoading = memo((props) => {
-  console.log('abc');
   return (
-    <>
-      <section>
-        <div className="custom-container">
-          <div className="wrapper">
-            <div className="productlist-title-container">
-              <div className="productlist-title">{props.sectionTitle}</div>
-            </div>
-            <div className="product-list-container loading-background">
-              Loading
-            </div>
-            <div className="decorate"></div>
+    <section>
+      <div className="custom-container">
+        <div className="wrapper">
+          <div className="productlist-title-container">
+            <div className="productlist-title">{props.sectionTitle}</div>
           </div>
+          <LoadingDiv />
+          <div className="decorate"></div>
         </div>
-      </section>
-    </>
+      </div>
+    </section>
   );
 });
 
 const ProductListPanel = memo((props) => {
   return (
-    <>
-      <section>
-        <div className="custom-container">
-          <div className="wrapper">
-            <div className="productlist-title-container">
-              <div className="productlist-title">{props.sectionTitle}</div>
-            </div>
-            <div className="product-list-container">
-              {props.productList.map((item, index) => {
-                return item.hasOwnProperty('product') ? (
-                  <ProductCardOnHome
-                    key={index}
-                    item={item}
-                  />
-                ) : (
-                  <ProductCardOnCategory
-                    key={index}
-                    item={item}
-                  />
-                );
-              })}
-            </div>
-            <div className="decorate"></div>
+    <section>
+      <div className="custom-container">
+        <div className="wrapper">
+          <div className="productlist-title-container">
+            <div className="productlist-title">{props.sectionTitle}</div>
           </div>
+          <div className="product-list-container">
+            {props.productList.map((item, index) => {
+              return item.hasOwnProperty('product') ? (
+                <ProductCardOnHome
+                  key={index}
+                  item={item}
+                />
+              ) : (
+                <ProductCardOnCategory
+                  key={index}
+                  item={item}
+                />
+              );
+            })}
+          </div>
+          <div className="decorate"></div>
         </div>
-      </section>
-    </>
+      </div>
+    </section>
   );
 });
 
@@ -61,7 +55,7 @@ const ProductCardOnHome = (props) => {
     <>
       <div className="product-card">
         <Link
-          to="/"
+          to={`./product/${props.item.category}/${props.item.product['_id']}`}
           className="product-link">
           <div className="product-image-container">
             {Array.isArray(props.item.product.img) ? (
@@ -119,7 +113,7 @@ const ProductCardOnCategory = (props) => {
     <>
       <div className="product-card">
         <Link
-          to="/"
+          to={`/product/${props.item.category}/${props.item['_id']}`}
           className="product-link">
           <div className="product-image-container">
             {Array.isArray(props.item.img) ? (

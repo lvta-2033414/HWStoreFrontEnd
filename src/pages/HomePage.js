@@ -1,4 +1,5 @@
-import { useEffect, useState, memo } from 'react';
+import { useEffect, useState, useRef, memo } from 'react';
+
 import productsOnHome from '../api/productsOnHome';
 import {
   Carousel,
@@ -10,19 +11,21 @@ import {
 const HomePage = () => {
   console.log('HomePage');
   const [productlist, setProductList] = useState({});
-  const [isLoading, setIsLoading] = useState(true);
+  // const [isLoading, setIsLoading] = useState(true);
+  let isLoading = useRef(true);
   useEffect(() => {
     const fetchProductsOnHome = async () => {
-      const productlist = await productsOnHome.getAll();
-      setProductList(productlist);
-      setIsLoading(false);
-      console.log(isLoading);
+      const result = await productsOnHome.getAll();
+      setProductList(result);
+      // setIsLoading(false);
+      isLoading.current = false;
     };
     fetchProductsOnHome();
   }, []);
-  useEffect(() => {
-    window.scrollTo(0, 0);
-  });
+  // useEffect(() => {
+  //   window.scrollTo(0, 0);
+  // });
+
   return (
     <>
       <Carousel />
@@ -31,8 +34,9 @@ const HomePage = () => {
         isHidden={false}
         handler={false}
       />
+
       {/* || !Array.isArray(productlist.discountProductList) */}
-      {isLoading || !Array.isArray(productlist.discountProductList) ? (
+      {isLoading.current ? (
         <ProductListLoading sectionTitle={'Sản Phẩm Khuyến Mãi'} />
       ) : (
         <ProductListPanel
@@ -41,7 +45,7 @@ const HomePage = () => {
           sectionTitle="Sản Phẩm Khuyến Mãi"
         />
       )}
-      {/* {isLoading || !Array.isArray(productlist.bestSellProductList) ? (
+      {isLoading.current || !Array.isArray(productlist.bestSellProductList) ? (
         <ProductListLoading sectionTitle={'Sản Phẩm Bán Chạy'} />
       ) : (
         <ProductListPanel
@@ -50,7 +54,7 @@ const HomePage = () => {
           sectionTitle="Sản Phẩm Bán Chạy"
         />
       )}
-      {isLoading || !Array.isArray(productlist.newProductList) ? (
+      {isLoading.current || !Array.isArray(productlist.newProductList) ? (
         <ProductListLoading sectionTitle={'Sản Phẩm Bán Chạy'} />
       ) : (
         <ProductListPanel
@@ -58,7 +62,7 @@ const HomePage = () => {
           sectionClassName="new-product-section"
           sectionTitle="Sản Phẩm Mới"
         />
-      )} */}
+      )}
     </>
   );
 };

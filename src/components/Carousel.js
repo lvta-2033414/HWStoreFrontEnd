@@ -1,5 +1,12 @@
 import { Swiper, SwiperSlide } from 'swiper/react';
-import { Pagination, Autoplay, EffectFade } from 'swiper';
+import {
+  Pagination,
+  Autoplay,
+  EffectFade,
+  Thumbs,
+  FreeMode,
+  Navigation,
+} from 'swiper';
 
 import 'swiper/css/bundle';
 import 'swiper/css/effect-fade';
@@ -124,5 +131,57 @@ const Carousel = (props) => {
 
   return <>{size < 600 ? <SwiperMobile /> : <SwiperPC />}</>;
 };
+
+export const Gallery = memo((props) => {
+  const [thumbsSwiper, setThumbsSwiper] = useState(null);
+  return (
+    <>
+      <Swiper
+        style={{
+          '--swiper-navigation-color': '#fff',
+          '--swiper-pagination-color': '#fff',
+        }}
+        // spaceBetween={10}
+        pagination={{
+          type: 'fraction',
+        }}
+        // navigation={true}
+        thumbs={{ swiper: thumbsSwiper }}
+        modules={[FreeMode, Navigation, Thumbs, Pagination]}
+        className="mySwiper2">
+        {props.images.map((image, index) => {
+          return (
+            <SwiperSlide key={index}>
+              <img
+                src={`/assets/${props.category}/${image}.webp`}
+                alt=""
+                style={{ width: '100%' }}
+              />
+            </SwiperSlide>
+          );
+        })}
+      </Swiper>
+      <Swiper
+        onSwiper={setThumbsSwiper}
+        spaceBetween={10}
+        slidesPerView={4}
+        freeMode={true}
+        watchSlidesProgress={true}
+        modules={[FreeMode, Navigation, Thumbs]}
+        className="mySwiper">
+        {props.images.map((image, index) => {
+          return (
+            <SwiperSlide key={index}>
+              <img
+                src={`/assets/${props.category}/${image}.webp`}
+                alt=""
+              />
+            </SwiperSlide>
+          );
+        })}
+      </Swiper>
+    </>
+  );
+});
 
 export default memo(Carousel);

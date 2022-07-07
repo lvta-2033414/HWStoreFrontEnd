@@ -37,3 +37,9 @@ ul {
     width: auto;
   }
 }
+
+@media screen and (max-width: 576px) {
+  .custom-container {
+    padding: 0;
+  }
+}

@@ -18,20 +18,19 @@ import '../cssfile/ProductsPage.css';
 
 export const ProductsPage = memo(() => {
   const params = useParams();
-  // console.log(params);
-  // const [productlist, setProductList] = useState([]);
+  const [productlist, setProductList] = useState([]);
   const isLoading = useRef(true);
-  // useEffect(() => {
-  //   const fetchProductList = async () => {
-  //     const productlist = await productList.getAll(params.category);
-  //     setProductList(productlist);
-  //     isLoading.current = false;
-  //   };
-  //   fetchProductList();
-  // }, [params.category]);
-  // useEffect(() => {
-  //   window.scrollTo(0, 0);
-  // });
+  useEffect(() => {
+    const fetchProductList = async () => {
+      const productlist = await productList.getAll(params.category);
+      setProductList(productlist);
+      isLoading.current = false;
+    };
+    fetchProductList();
+  }, [params.category]);
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  });
 
   let title, filter;
   switch (params.category) {
@@ -77,22 +76,15 @@ export const ProductsPage = memo(() => {
   console.log('ProductsPage redeered');
   return (
     <>
-      {/* <div style={{ height: '900px' }}></div> */}
       <Filter filter={filter} />
       {isLoading.current ? (
-        <>
-          <ProductListLoading sectionTitle={title} />
-        </>
+        <ProductListLoading sectionTitle={title} />
       ) : (
-        <>
-          <ProductListPanel
-            // productList={productlist}
-            sectionTitle={title}
-          />
-        </>
+        <ProductListPanel
+          productList={productlist}
+          sectionTitle={title}
+        />
       )}
     </>
   );
 });
-
-//  default memo(ProductsPage);

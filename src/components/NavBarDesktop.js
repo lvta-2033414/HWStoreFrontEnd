@@ -8,18 +8,12 @@ const Logo = (props) => {
   const Context = useContext(ToggleContext);
   const firstRender = useRef(false);
   const location = useLocation();
-  // console.log(location);
+
   const trackScroll = useRef(function () {
     if (window.innerWidth > 992) {
       if (window.scrollY > 10) {
-        // if (Context.hiddenHamburgerMenu) {
-        //   Context.setHiddenHamburgerMenu(false);
-        // }
         Context.setHiddenHamburgerMenu(false);
       } else {
-        // if (!Context.hiddenHamburgerMenu) {
-        //   Context.setHiddenHamburgerMenu(true);
-        // }
         Context.setHiddenHamburgerMenu(true);
       }
     }
@@ -246,7 +240,15 @@ const NavBarDesktop = () => {
         <div className="main-nav-wrapper">
           <div className="logo-and-hambergur-menu-section">
             <ToggleProvider>
-              <Link to="/">
+              <Link
+                to="/"
+                onClick={() =>
+                  window.scroll({
+                    top: 0,
+                    left: 0,
+                    behavior: 'smooth',
+                  })
+                }>
                 <Logo />
               </Link>
               <HambergurMenu />

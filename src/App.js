@@ -4,7 +4,7 @@ import { GlobalContext } from './store/GlobalState';
 
 import './index.css';
 
-import { HomePage, ProductsPage } from './pages';
+import { HomePage, ProductsPage, SingleProductPage } from './pages';
 import { NavBarDesktop, SideMenu, Footer } from './components';
 
 function App() {
@@ -26,6 +26,10 @@ function App() {
         <Route
           path="/product/:category"
           element={<ProductsPage />}
+        />
+        <Route
+          path="/product/:category/:id"
+          element={<SingleProductPage />}
         />
       </Routes>
       <Footer />
