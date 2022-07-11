@@ -1,4 +1,4 @@
-import { useEffect, useState, useRef, memo } from 'react';
+import { useEffect, useState, useRef, memo, useContext } from 'react';
 import { useParams } from 'react-router-dom';
 
 import productList from '../api/productList';
@@ -14,12 +14,15 @@ import {
   keyboardOptions,
   displayOptions,
 } from '../components/FilterOptions';
+import { FilterContext } from '../store/FilterState';
 import '../cssfile/ProductsPage.css';
 
 export const ProductsPage = memo(() => {
   const params = useParams();
   const [productlist, setProductList] = useState([]);
+  // const [filteredProduct, setFilteredProduct] = useState([]);
   const isLoading = useRef(true);
+  let filteredProduct = useRef([]);
   useEffect(() => {
     const fetchProductList = async () => {
       const productlist = await productList.getAll(params.category);
@@ -27,7 +30,9 @@ export const ProductsPage = memo(() => {
       isLoading.current = false;
     };
     fetchProductList();
+    filteredProduct = [];
   }, [params.category]);
+
   useEffect(() => {
     window.scrollTo(0, 0);
   });
@@ -76,7 +81,14 @@ export const ProductsPage = memo(() => {
   console.log('ProductsPage redeered');
   return (
     <>
-      <Filter filter={filter} />
+      <Filter
+        filter={filter}
+        productList={productlist}
+        setFilteredProduct={(filteredArray) => {
+          filteredProduct.current = [...filteredArray];
+          console.log(filteredProduct.current);
+        }}
+      />
       {isLoading.current ? (
         <ProductListLoading sectionTitle={title} />
       ) : (

@@ -21,6 +21,7 @@ const ProductListLoading = memo((props) => {
 });
 
 const ProductListPanel = memo((props) => {
+  // console.log(props.productList);
   return (
     <section>
       <div className="custom-container">

@@ -6,7 +6,6 @@ export const cpuOptions = {
     'Core i5',
     'Core i7',
     'Core i9',
-    'Ryzen 3',
     'Ryzen 5',
     'Ryzen 7',
     'Ryzen 9',
@@ -16,7 +15,7 @@ export const cpuOptions = {
 
 export const mainOptions = {
   'Thương hiệu': ['Tất cả', 'MSI', 'GIGABYTE', 'ASUS', 'ASROCK'],
-  chipset: ['Tất cả', 'AMD', 'INTEL'],
+  Chipset: ['Tất cả', 'X570', 'Z690'],
 };
 
 export const ramOptions = {
@@ -26,12 +25,12 @@ export const ramOptions = {
 
 export const vgaOptions = {
   'Thương hiệu': ['Tất cả', 'MSI', 'GIGABYTE', 'ASUS', 'EVGA'],
-  chipset: ['Tất cả', 'NVIDIA', 'AMD'],
+  Chipset: ['Tất cả', 'NVIDIA', 'AMD'],
 };
 
 export const hddOptions = {
   'Thương hiệu': ['Tất cả', 'WD', 'SEAGATE'],
-  'Dung lượng': ['Tất cả', '120GB', '250GB', '512GB', '1TB', '2TB'],
+  'Dung lượng': ['Tất cả', '120GB', '250GB', '500GB', '1TB', '2TB'],
 };
 
 export const psuOptions = {
@@ -48,5 +47,24 @@ export const keyboardOptions = {
 
 export const displayOptions = {
   'Thương hiệu': ['Tất cả'],
-  'Kích thước': ['24 inch', '27 inch', '32 inch', '34 inch'],
+  'Kích thước': ['Tất cả', '24 inch', '27 inch', '32 inch', '34 inch'],
+};
+
+export const converter = (input) => {
+  let result;
+  switch (input) {
+    case 'Thương hiệu':
+      result = 'brand';
+      break;
+    case 'Số nhân':
+      result = 'Core';
+      break;
+    case 'Dung lượng':
+      result = 'Capacity';
+      break;
+    case 'Kích thước':
+      result = 'Size';
+      break;
+  }
+  return result;
 };

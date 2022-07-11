@@ -6,6 +6,7 @@ import './index.css';
 
 import { HomePage, ProductsPage, SingleProductPage } from './pages';
 import { NavBarDesktop, SideMenu, Footer } from './components';
+import { FilterProvider } from './store/FilterState';
 
 function App() {
   const Context = useContext(GlobalContext);
@@ -25,7 +26,11 @@ function App() {
         />
         <Route
           path="/product/:category"
-          element={<ProductsPage />}
+          element={
+            <FilterProvider>
+              <ProductsPage />
+            </FilterProvider>
+          }
         />
         <Route
           path="/product/:category/:id"

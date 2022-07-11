@@ -1,12 +1,62 @@
-import React, { useEffect, memo } from 'react';
+import React, { useEffect, memo, useRef, useContext } from 'react';
+import { useLocation } from 'react-router-dom';
 
 import '../cssfile/filter.css';
 
 export const Filter = memo((props) => {
+  const location = useLocation();
   console.log('Filter is rendered');
+  let condition = useRef({});
+  let tempProductArray = [...props.productList];
+
+  const performFilter = () => {
+    console.log(condition.current);
+    tempProductArray = [...props.productList];
+    let tempArray = [];
+    for (const property in condition.current) {
+      tempArray = [];
+      tempProductArray.forEach((product) => {
+        switch (property) {
+          case 'name':
+            if (
+              product[property]
+                .toLowerCase()
+                .includes(condition.current[property].toLowerCase())
+            ) {
+              tempArray.push(product);
+            }
+            break;
+          case 'Chipset':
+            if (
+              product[property]
+                .toLowerCase()
+                .includes(condition.current[property].toLowerCase())
+            ) {
+              tempArray.push(product);
+            }
+            break;
+          default:
+            if (
+              product[property]
+                .toString()
+                .toLowerCase()
+                .includes(condition.current[property].toLowerCase())
+            ) {
+              tempArray.push(product);
+            }
+        }
+      });
+      tempProductArray = [...tempArray];
+    }
+    // console.log(tempProductArray);
+    props.setFilteredProduct(tempProductArray);
+  };
+
   useEffect(() => {
     window.scrollTo(0, 0);
-  });
+    // Buộc phải có
+    condition.current = {};
+  }, [location]);
   return (
     <section className="filter-section">
       <div className="custom-container">
@@ -20,6 +70,8 @@ export const Filter = memo((props) => {
                   index={index}
                   option={option}
                   optionList={props.filter}
+                  condition={condition}
+                  filterHandler={performFilter}
                 />
               );
             })}
@@ -27,10 +79,18 @@ export const Filter = memo((props) => {
               <div className="filter-title-container">
                 <span className="filter-option-title">Giá</span>
                 <div className="filter-button-container">
-                  <button className="filter-option-button active">
+                  <button
+                    id="filter-option-button-increase"
+                    className="filter-option-button active"
+                    onClick={addActiveClass2}>
                     Tăng dần
                   </button>
-                  <button className="filter-option-button">Giảm dần</button>
+                  <button
+                    id="filter-option-button-decrease"
+                    className="filter-option-button"
+                    onClick={addActiveClass2}>
+                    Giảm dần
+                  </button>
                 </div>
               </div>
             </li>
@@ -42,6 +102,22 @@ export const Filter = memo((props) => {
 });
 
 const Row = (props) => {
+  console.log('Row rendered');
+  const location = useLocation();
+  const checkPropertiesOfCondition = (event) => {
+    if (event.currentTarget.innerText === 'Tất cả') {
+      delete props.condition.current[converter(props.option)];
+    } else {
+      if (event.currentTarget.innerText === 'NVIDIA') {
+        props.condition.current[converter(props.option)] = 'GeForce';
+      } else {
+        props.condition.current[converter(props.option)] =
+          event.currentTarget.innerText;
+      }
+    }
+    props.filterHandler();
+  };
+
   useEffect(() => {
     const propertyList = Object.keys(props.optionList);
     propertyList.forEach((property, index) => {
@@ -57,7 +133,7 @@ const Row = (props) => {
         }
       }
     });
-  });
+  }, [location]);
   return (
     <li className="filter-option-row">
       <div className="filter-title-container">
@@ -67,7 +143,10 @@ const Row = (props) => {
         {props.optionList[props.option].map((element, index) => {
           return (
             <button
-              onClick={addActiveClass}
+              onClick={(event) => {
+                addActiveClass(event);
+                checkPropertiesOfCondition(event);
+              }}
               key={index}
               id={props.index.toString() + index.toString()}
               className={
@@ -84,8 +163,6 @@ const Row = (props) => {
   );
 };
 
-// const condition = [];
-
 const addActiveClass = (event) => {
   const cssClass = `.filter-option-button${event.currentTarget.id.slice(0, 1)}`;
   const listOfButton = document.querySelectorAll(cssClass);
@@ -97,7 +174,39 @@ const addActiveClass = (event) => {
   document.getElementById(`${event.currentTarget.id}`).classList.add('active');
 };
 
-// const changeActiveButton = (event) => {
-//   document.getElementById(`${event.currentTarget.id}`).classList.add('active');
-//   // document.
-// };
+const addActiveClass2 = (event) => {
+  event.currentTarget.classList.add('active');
+  if (event.currentTarget.id === 'filter-option-button-increase') {
+    document
+      .getElementById('filter-option-button-decrease')
+      .classList.remove('active');
+  } else {
+    document
+      .getElementById('filter-option-button-increase')
+      .classList.remove('active');
+  }
+};
+
+const converter = (input) => {
+  let result;
+  switch (input) {
+    case 'Series':
+      result = 'name';
+      break;
+    case 'Thương hiệu':
+      result = 'brand';
+      break;
+    case 'Số nhân':
+      result = 'Core';
+      break;
+    case 'Dung lượng':
+      result = 'Capacity';
+      break;
+    case 'Kích thước':
+      result = 'Size';
+      break;
+    default:
+      result = input;
+  }
+  return result;
+};
