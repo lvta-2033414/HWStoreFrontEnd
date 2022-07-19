@@ -91,7 +91,7 @@
 }
 
 .nav-item-link {
-  display: block;
+  cursor: pointer;
 }
 
 .nav-icon {
@@ -281,6 +281,33 @@
   font-size: 13px;
   color: rgb(51, 51, 51);
 }
+
+.added-to-cart-panel {
+  position: absolute;
+  top: 90px;
+  right: -260px;
+  opacity: 1;
+  padding: 5px 10px;
+  background-color: white;
+  border-radius: 7px;
+  display: flex;
+  align-items: center;
+  transition: right 0.5s, opacity 0.1s;
+}
+
+.display-panel {
+  right: 20px;
+}
+
+.added-to-cart-icon {
+  font-size: 24px;
+  color: rgb(41, 214, 41);
+  margin-right: 10px;
+}
+
+.added-to-cart-txt {
+  font-size: 14px;
+}
 /* -------- Responsive styles -------- */
 
 @media screen and (max-width: 992px) {
@@ -342,6 +369,10 @@
     height: 100vh;
     z-index: 710;
     background-color: #f6f6f6;
+  }
+
+  .added-to-cart-panel {
+    top: 70px;
   }
 }
 

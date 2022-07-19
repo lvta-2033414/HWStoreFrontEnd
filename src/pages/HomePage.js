@@ -9,22 +9,16 @@ import {
 } from '../components/';
 
 const HomePage = () => {
-  console.log('HomePage');
   const [productlist, setProductList] = useState({});
-  // const [isLoading, setIsLoading] = useState(true);
   let isLoading = useRef(true);
   useEffect(() => {
     const fetchProductsOnHome = async () => {
       const result = await productsOnHome.getAll();
       setProductList(result);
-      // setIsLoading(false);
       isLoading.current = false;
     };
     fetchProductsOnHome();
   }, []);
-  // useEffect(() => {
-  //   window.scrollTo(0, 0);
-  // });
 
   return (
     <>
@@ -34,8 +28,6 @@ const HomePage = () => {
         isHidden={false}
         handler={false}
       />
-
-      {/* || !Array.isArray(productlist.discountProductList) */}
       {isLoading.current ? (
         <ProductListLoading sectionTitle={'Sản Phẩm Khuyến Mãi'} />
       ) : (

@@ -1,27 +1,31 @@
-import { useEffect, useState, useRef, memo, useContext } from 'react';
+import { memo, useEffect, useRef, useState } from 'react';
 import { useParams } from 'react-router-dom';
 
 import productList from '../api/productList';
-import { ProductListPanel, ProductListLoading, Filter } from '../components';
 import {
+  EmptyProductList,
+  Filter,
+  ProductListLoading,
+  ProductListPanel,
+} from '../components';
+import {
+  caseOptions,
   cpuOptions,
+  displayOptions,
+  hddOptions,
+  keyboardOptions,
   mainOptions,
+  psuOptions,
   ramOptions,
   vgaOptions,
-  hddOptions,
-  psuOptions,
-  caseOptions,
-  keyboardOptions,
-  displayOptions,
 } from '../components/FilterOptions';
-import { FilterContext } from '../store/FilterState';
 import '../cssfile/ProductsPage.css';
 
 export const ProductsPage = memo(() => {
   const params = useParams();
   const [productlist, setProductList] = useState([]);
-  // const [filteredProduct, setFilteredProduct] = useState([]);
   const isLoading = useRef(true);
+  const [rerender, setRerender] = useState(false);
   let filteredProduct = useRef([]);
   useEffect(() => {
     const fetchProductList = async () => {
@@ -30,7 +34,7 @@ export const ProductsPage = memo(() => {
       isLoading.current = false;
     };
     fetchProductList();
-    filteredProduct = [];
+    filteredProduct.current = [];
   }, [params.category]);
 
   useEffect(() => {
@@ -78,7 +82,6 @@ export const ProductsPage = memo(() => {
     default:
       title = 'Sản Phẩm';
   }
-  console.log('ProductsPage redeered');
   return (
     <>
       <Filter
@@ -88,9 +91,19 @@ export const ProductsPage = memo(() => {
           filteredProduct.current = [...filteredArray];
           console.log(filteredProduct.current);
         }}
+        setRerender={setRerender}
       />
       {isLoading.current ? (
         <ProductListLoading sectionTitle={title} />
+      ) : filteredProduct.current.length > 0 ? (
+        filteredProduct.current[0] === null ? (
+          <EmptyProductList />
+        ) : (
+          <ProductListPanel
+            productList={filteredProduct.current}
+            sectionTitle={title}
+          />
+        )
       ) : (
         <ProductListPanel
           productList={productlist}

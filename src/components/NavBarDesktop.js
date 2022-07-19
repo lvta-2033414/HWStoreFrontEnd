@@ -1,10 +1,17 @@
-import { useContext, useEffect, useState, createContext, useRef } from 'react';
+import { createContext, useContext, useEffect, useRef, useState } from 'react';
+import { useSelector } from 'react-redux';
 import { Link, useLocation } from 'react-router-dom';
 import { GlobalContext } from '../store/GlobalState';
 
+import Button from '@mui/material/Button';
+import Dialog from '@mui/material/Dialog';
+import DialogActions from '@mui/material/DialogActions';
+import DialogContent from '@mui/material/DialogContent';
+import { RegisterForm } from './RegisterForm';
+
 import '../cssfile/navibar.css';
 
-const Logo = (props) => {
+const Logo = () => {
   const Context = useContext(ToggleContext);
   const firstRender = useRef(false);
   const location = useLocation();
@@ -28,7 +35,6 @@ const Logo = (props) => {
 
   useEffect(() => {
     if (firstRender.current && window.location.pathname === '/') {
-      console.log('add event listeners');
       Context.setHiddenHamburgerMenu(true);
       document.addEventListener('scroll', trackScroll.current);
     }
@@ -36,7 +42,6 @@ const Logo = (props) => {
 
   useEffect(() => {
     if (firstRender.current && window.location.pathname !== '/') {
-      console.log('remove event listeners');
       document.removeEventListener('scroll', trackScroll.current);
       Context.setHiddenHamburgerMenu(false);
     }
@@ -96,7 +101,11 @@ const navIconContent = [
   { icon: 'nav-icon bi bi-envelope', title: 'LIÊN HỆ' },
 ];
 
-const MainNavIcon = () => {
+const MainNavIcon = ({ handleClickOpen }) => {
+  const cart = useSelector((state) => state.cart);
+  useEffect(() => {
+    localStorage.setItem('cart', JSON.stringify(cart));
+  }, [cart]);
   return (
     <ul className="main-nav-icon-list">
       {navIconContent.map((item, index) => {
@@ -114,28 +123,20 @@ const MainNavIcon = () => {
         );
       })}
       <li className="main-nav-icon">
-        <a
+        <div
           className="nav-item-link"
-          href="/">
+          onClick={handleClickOpen}>
           <i className="nav-icon bi bi-person-circle"></i>
-          <span
-            className="sign-in-button nav-icon-title"
-            href="#">
-            ĐĂNG NHẬP
-          </span>
-        </a>
+          <span className="sign-in-button nav-icon-title">ĐĂNG NHẬP</span>
+        </div>
       </li>
       <li className="cart-container">
-        <a
+        <Link
           className="nav-item-link"
-          href="/">
+          to="/cart">
           <i className="nav-icon bi bi-cart3"></i>
-          <span
-            className="cart-button nav-icon-title"
-            href="#">
-            GIỎ HÀNG
-          </span>
-        </a>
+          <span className="cart-button nav-icon-title">GIỎ HÀNG</span>
+        </Link>
       </li>
     </ul>
   );
@@ -193,7 +194,6 @@ const SideMenu = (props) => {
   };
   const hiddenToggle = useContext(GlobalContext);
   return (
-    // props.isHidden
     props.isHidden || (
       <div
         className={props.outerMostClass}
@@ -234,6 +234,15 @@ const ToggleProvider = ({ children }) => {
   );
 };
 const NavBarDesktop = () => {
+  const [open, setOpen] = useState(false);
+
+  const handleClickOpen = () => {
+    setOpen(true);
+  };
+
+  const handleClose = () => {
+    setOpen(false);
+  };
   return (
     <header className="main-nav-section">
       <nav className="custom-container">
@@ -255,10 +264,25 @@ const NavBarDesktop = () => {
             </ToggleProvider>
           </div>
           <div className="main-nav-icon-container">
-            <MainNavIcon />
+            <MainNavIcon handleClickOpen={handleClickOpen} />
           </div>
         </div>
       </nav>
+      <div className="added-to-cart-panel custom-box-shadow">
+        <i className="added-to-cart-icon bi bi-check-circle-fill"></i>
+        <span className="added-to-cart-txt">Đã thêm sản phẩm vào giỏ hàng</span>
+      </div>
+      <Dialog
+        open={open}
+        onClose={handleClose}
+        disableEscapeKeyDown={true}>
+        <DialogContent>
+          <RegisterForm />
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleClose}>Cancel</Button>
+        </DialogActions>
+      </Dialog>
     </header>
   );
 };

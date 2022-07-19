@@ -141,11 +141,9 @@ export const Gallery = memo((props) => {
           '--swiper-navigation-color': '#fff',
           '--swiper-pagination-color': '#fff',
         }}
-        // spaceBetween={10}
         pagination={{
           type: 'fraction',
         }}
-        // navigation={true}
         thumbs={{ swiper: thumbsSwiper }}
         modules={[FreeMode, Navigation, Thumbs, Pagination]}
         className="mySwiper2">

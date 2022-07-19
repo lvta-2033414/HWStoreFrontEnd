@@ -20,6 +20,10 @@ a:hover {
   color: black;
 }
 
+button {
+  cursor: pointer;
+}
+
 ul {
   margin: 0;
   padding: 0;
@@ -30,6 +34,10 @@ ul {
   width: 1232px;
   padding: 0 16px;
   margin: 0 auto;
+}
+
+.custom-box-shadow {
+  box-shadow: 0px 0px 10px rgba(198, 197, 197, 0.979);
 }
 
 @media screen and (max-width: 1200px) {

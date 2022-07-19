@@ -20,8 +20,31 @@ const ProductListLoading = memo((props) => {
   );
 });
 
+export const EmptyProductList = memo((props) => {
+  return (
+    <section>
+      <div className="custom-container">
+        <div className="wrapper">
+          <div className="productlist-title-container">
+            <div className="productlist-title">{props.sectionTitle}</div>
+          </div>
+          <div
+            style={{
+              height: '100px',
+              lineHeight: '100px',
+              fontSize: '24px',
+              textAlign: 'center',
+            }}>
+            Không tìm thấy sản phẩm phù hợp
+          </div>
+          <div className="decorate"></div>
+        </div>
+      </div>
+    </section>
+  );
+});
+
 const ProductListPanel = memo((props) => {
-  // console.log(props.productList);
   return (
     <section>
       <div className="custom-container">

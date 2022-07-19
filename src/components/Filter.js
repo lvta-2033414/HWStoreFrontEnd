@@ -1,11 +1,10 @@
-import React, { useEffect, memo, useRef, useContext } from 'react';
+import React, { memo, useEffect, useRef } from 'react';
 import { useLocation } from 'react-router-dom';
 
 import '../cssfile/filter.css';
 
 export const Filter = memo((props) => {
   const location = useLocation();
-  console.log('Filter is rendered');
   let condition = useRef({});
   let tempProductArray = [...props.productList];
 
@@ -48,13 +47,15 @@ export const Filter = memo((props) => {
       });
       tempProductArray = [...tempArray];
     }
-    // console.log(tempProductArray);
+    if (tempProductArray.length === 0) {
+      tempProductArray.push(null);
+    }
     props.setFilteredProduct(tempProductArray);
+    props.setRerender((prevState) => !prevState);
   };
 
   useEffect(() => {
     window.scrollTo(0, 0);
-    // Buộc phải có
     condition.current = {};
   }, [location]);
   return (
@@ -75,25 +76,6 @@ export const Filter = memo((props) => {
                 />
               );
             })}
-            <li className="filter-option-row">
-              <div className="filter-title-container">
-                <span className="filter-option-title">Giá</span>
-                <div className="filter-button-container">
-                  <button
-                    id="filter-option-button-increase"
-                    className="filter-option-button active"
-                    onClick={addActiveClass2}>
-                    Tăng dần
-                  </button>
-                  <button
-                    id="filter-option-button-decrease"
-                    className="filter-option-button"
-                    onClick={addActiveClass2}>
-                    Giảm dần
-                  </button>
-                </div>
-              </div>
-            </li>
           </ul>
         </div>
       </div>
@@ -102,7 +84,6 @@ export const Filter = memo((props) => {
 });
 
 const Row = (props) => {
-  console.log('Row rendered');
   const location = useLocation();
   const checkPropertiesOfCondition = (event) => {
     if (event.currentTarget.innerText === 'Tất cả') {
@@ -163,6 +144,36 @@ const Row = (props) => {
   );
 };
 
+const PriceSortButton = (props) => {
+  return (
+    <li className="filter-option-row">
+      <div className="filter-title-container">
+        <span className="filter-option-title">Giá</span>
+        <div className="filter-button-container">
+          <button
+            id="filter-option-button-increase"
+            className="filter-option-button active"
+            onClick={(event) => {
+              addActiveClass2(event, props.condition);
+              props.filterHandler();
+            }}>
+            Tăng dần
+          </button>
+          <button
+            id="filter-option-button-decrease"
+            className="filter-option-button"
+            onClick={(event) => {
+              addActiveClass2(event, props.condition);
+              props.filterHandler();
+            }}>
+            Giảm dần
+          </button>
+        </div>
+      </div>
+    </li>
+  );
+};
+
 const addActiveClass = (event) => {
   const cssClass = `.filter-option-button${event.currentTarget.id.slice(0, 1)}`;
   const listOfButton = document.querySelectorAll(cssClass);
@@ -174,16 +185,18 @@ const addActiveClass = (event) => {
   document.getElementById(`${event.currentTarget.id}`).classList.add('active');
 };
 
-const addActiveClass2 = (event) => {
+const addActiveClass2 = (event, condition) => {
   event.currentTarget.classList.add('active');
   if (event.currentTarget.id === 'filter-option-button-increase') {
     document
       .getElementById('filter-option-button-decrease')
       .classList.remove('active');
+    condition.current.price = 'INC';
   } else {
     document
       .getElementById('filter-option-button-increase')
       .classList.remove('active');
+    condition.current.price = 'DEC';
   }
 };
 

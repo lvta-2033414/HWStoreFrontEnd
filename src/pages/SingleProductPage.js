@@ -1,35 +1,19 @@
 import { useState, useEffect, memo, useRef } from 'react';
 import { Link, useParams } from 'react-router-dom';
+import { useDispatch } from 'react-redux';
 import getProduct from '../api/getOneProduct';
+import { ADD_TO_CART } from '../actions/CartActions';
 
 import { Gallery } from '../components';
 import { LoadingPage } from './LoadingPage';
 
 import '../cssfile/singleproductpage.css';
 
-const product = {
-  category: 'cpu',
-  warranty: '36 tháng',
-  brand: 'AMD',
-  productID: 'Ryzen 9-5950X',
-  price: 16500000,
-  'discount price': 0,
-  img: 'R9',
-  Name: 'Ryzen 9 - 5950X',
-  Socket: 'AM4',
-  Core: 16,
-  Thread: 32,
-  'Base Freq': '3.4 GHz',
-  'Boost Freq': '4.9 GHz',
-  'L2 cache': '8 MB',
-  'L3 cahe': '64 MB',
-  TDP: '105 W',
-};
-
 export const SingleProductPage = memo(() => {
   const params = useParams();
   const [product, setProduct] = useState({});
   const isLoading = useRef(true);
+  const dispatch = useDispatch();
   useEffect(() => {
     const fetchProduct = async () => {
       const product = await getProduct(params.category, params.id);
@@ -44,13 +28,57 @@ export const SingleProductPage = memo(() => {
   useEffect(() => {
     window.scrollTo(0, 0);
   });
+
   if (isLoading.current) {
     return <LoadingPage />;
   } else {
+    const {
+      _id,
+      category,
+      name,
+      price,
+      'discount price': discountPrice,
+    } = product;
+    const img = product.img[0];
+    const debounce = (callback, wait) => {
+      let timeoutId;
+      return function () {
+        if (timeoutId) {
+          clearTimeout(timeoutId);
+        }
+        timeoutId = setTimeout(callback, wait);
+      };
+    };
+    const hiddenAddToCartPanel = debounce(() => {
+      document
+        .querySelector('.added-to-cart-panel')
+        .classList.remove('display-panel');
+    }, 2500);
+    const addToCartHandler = () => {
+      dispatch({
+        type: ADD_TO_CART,
+        payload: {
+          id: _id,
+          category,
+          price,
+          discountPrice,
+          img,
+          name,
+          quantity: 1,
+        },
+      });
+      const addToCartPanel = document.querySelector('.added-to-cart-panel');
+      if (!addToCartPanel.classList.contains('display-panel')) {
+        addToCartPanel.classList.add('display-panel');
+        hiddenAddToCartPanel();
+      } else {
+        addToCartPanel.style.opacity = 0;
+        setTimeout(() => (addToCartPanel.style.opacity = 1), 200);
+        hiddenAddToCartPanel();
+      }
+    };
     return (
-      <section
-        className="detail-product-page"
-        style={{ marginTop: '150px' }}>
+      <section className="detail-product-page">
         <div className="custom-container">
           <div className="product-display-and-side-info-container">
             <div className="product-display-section">
@@ -88,8 +116,14 @@ export const SingleProductPage = memo(() => {
                   <span className="original-price" />
                 )}
                 <div className="buy-button-container">
-                  <button className="buy-now-button">MUA NGAY</button>
-                  <button className="add-to-cart-button">
+                  <Link
+                    to="/cart"
+                    className="buy-now-link">
+                    <button className="buy-now-button">MUA NGAY</button>
+                  </Link>
+                  <button
+                    className="add-to-cart-button"
+                    onClick={addToCartHandler}>
                     THÊM VÀO GIỎ HÀNG
                   </button>
                 </div>
@@ -99,7 +133,6 @@ export const SingleProductPage = memo(() => {
             <SideInfoPanel />
           </div>
         </div>
-        {/* <div>Notify Panel</div> */}
       </section>
     );
   }
