@@ -4,7 +4,7 @@ import { GlobalContext } from './store/GlobalState';
 
 import './index.css';
 
-import { HomePage, ProductsPage, SingleProductPage } from './pages';
+import { HomePage, ProductsPage, SingleProductPage, CartPage } from './pages';
 import { NavBarDesktop, SideMenu, Footer } from './components';
 import { FilterProvider } from './store/FilterState';
 
@@ -18,6 +18,7 @@ function App() {
         isHidden={Context.isHidden}
         handler={true}
       />
+
       <Routes>
         <Route
           exact
@@ -35,6 +36,10 @@ function App() {
         <Route
           path="/product/:category/:id"
           element={<SingleProductPage />}
+        />
+        <Route
+          path="/cart"
+          element={<CartPage />}
         />
       </Routes>
       <Footer />

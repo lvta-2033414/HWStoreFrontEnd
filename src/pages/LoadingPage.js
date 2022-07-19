@@ -1,5 +1,3 @@
-// import React from 'react';
-
 import '../cssfile/loadingpage.css';
 
 const LoadingPage = () => {

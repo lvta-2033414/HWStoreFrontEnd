@@ -1,0 +1,17 @@
+.wrapper-field {
+  padding-top: 20px;
+}
+
+.avatar-icon-login-form {
+  margin: 0 auto;
+  background-color: #9c27b0 !important;
+}
+
+.create-account-title {
+  text-align: center;
+  padding: 10px 0 20px 0;
+}
+
+.create-account-btn {
+  margin: 20px 0 10px !important;
+}
