@@ -1,45 +1,48 @@
 import { yupResolver } from '@hookform/resolvers/yup';
 import { LockOutlined } from '@mui/icons-material';
 import { Avatar, Button, Typography } from '@mui/material';
-import { createTheme, ThemeProvider, makeStyles } from '@mui/material/styles';
 import { useForm } from 'react-hook-form';
 import * as yup from 'yup';
-import { InputField, PasswordField } from './index.js';
 import '../cssfile/loginform.css';
+import { InputField, PasswordField } from './index.js';
 
-const theme = createTheme();
-// console.log(theme);
-// const useStyles = makeStyles((theme) => ({
-//   root: {},
-//   avatar: {},
-//   title: {},
-// }));
-
-const schema = yup
-  .object({
-    fullName: yup.string().required('Vui lòng điền đầy đủ họ tên'),
-  })
-  .required();
+const schema = yup.object().shape({
+  fullName: yup
+    .string()
+    .required('Vui lòng nhập đầy đủ họ tên')
+    .test(' ', 'Vui lòng nhập ít nhất 2 từ', (value) => {
+      return value.split(' ').length >= 2;
+    }),
+  email: yup
+    .string()
+    .required('Vui lòng nhập email')
+    .email('Vui lòng nhập email hợp lệ'),
+  password: yup
+    .string()
+    .required('Vui lòng nhập mật khẩu')
+    .min(6, 'Vui lòng nhập ít nhất 6 kí tự')
+    .max(16, 'Độ dài tối đa của mật khẩu là  16 kí tự'),
+  retypePassword: yup
+    .string()
+    .required('Vui lòng nhập lại mật khẩu')
+    .oneOf([yup.ref('password')], 'Mật khẩu nhập lại không trùng khớp'),
+});
+// .
 
 export const RegisterForm = () => {
-  //   const classes = useStyles();
-
   const form = useForm({
     defaultValues: {
-      'Họ tên': '',
-      Email: '',
-      Username: '',
-      Password: '',
-      Retypepassword: '',
+      fullName: '',
+      email: '',
+      password: '',
+      retypePassword: '',
     },
     resolver: yupResolver(schema),
   });
-  //   console.log(form);
+
   const handleSubmit = (values) => {
-    // const { onSubmit } = props;
-    // if (onSubmit) onSubmit(values);
-    // form.reset();
-    console.log('values: ', values);
+    console.log('Form submit:', values);
+    form.reset();
   };
   return (
     <div className="wrapper-field">
@@ -77,7 +80,8 @@ export const RegisterForm = () => {
           className="create-account-btn"
           fullWidth
           variant="contained"
-          color="primary">
+          color="primary"
+          type="submit">
           Tạo tài khoản
         </Button>
       </form>

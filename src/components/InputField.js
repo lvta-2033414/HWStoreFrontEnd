@@ -1,12 +1,15 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { TextField } from '@mui/material';
 import { Controller } from 'react-hook-form';
 
 export default function InputField(props) {
   const { form, name, label } = props;
-  const { errors, formState } = form;
-  //   const hasError = formState.touchedFields[name] && errors[name];
-  //   console.log(errors[name], formState[name]);
+  const {
+    formState: { errors },
+    formState,
+  } = form;
+  const hasError = errors[name];
+
   return (
     <Controller
       name={name}
@@ -15,7 +18,8 @@ export default function InputField(props) {
         <TextField
           {...field}
           label={label}
-          //   helperText="Vui lòng điền đầy đủ họ tên"
+          error={!!hasError}
+          helperText={errors[name]?.message}
           fullWidth
           margin="normal"
         />

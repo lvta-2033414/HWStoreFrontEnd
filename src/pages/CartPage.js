@@ -14,7 +14,7 @@ import { LoadingDiv } from '../pages/LoadingPage';
 import '../cssfile/cartpage.css';
 
 export const CartPage = () => {
-  const itemsInCart = useSelector((state) => state.cart);
+  const itemsInCart = useSelector((state) => state.cartReducer.cart);
   return (
     <section className="cart-page">
       <div className="custom-container">
@@ -203,7 +203,7 @@ const CartItem = ({ product }) => {
 };
 
 const Payment = () => {
-  const totalAmount = useSelector((state) => state.total_amount);
+  const totalAmount = useSelector((state) => state.cartReducer.total_amount);
   return (
     <div className="payment-section custom-box-shadow">
       <div className="payment-section-title">Thanh toán</div>

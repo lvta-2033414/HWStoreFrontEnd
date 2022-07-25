@@ -102,7 +102,7 @@ const navIconContent = [
 ];
 
 const MainNavIcon = ({ handleClickOpen }) => {
-  const cart = useSelector((state) => state.cart);
+  const cart = useSelector((state) => state.cartReducer.cart);
   useEffect(() => {
     localStorage.setItem('cart', JSON.stringify(cart));
   }, [cart]);
@@ -240,8 +240,10 @@ const NavBarDesktop = () => {
     setOpen(true);
   };
 
-  const handleClose = () => {
-    setOpen(false);
+  const handleClose = (_, reason) => {
+    if (reason !== 'backdropClick') {
+      setOpen(false);
+    }
   };
   return (
     <header className="main-nav-section">

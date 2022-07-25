@@ -10,7 +10,7 @@ import {
 
 const getLocalCart = () =>
   localStorage.getItem('cart') ? JSON.parse(localStorage.getItem('cart')) : [];
-
+//
 const initialState = {
   cart: getLocalCart(),
   total_items: 0,

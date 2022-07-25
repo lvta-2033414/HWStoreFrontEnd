@@ -119,7 +119,11 @@ export const SingleProductPage = memo(() => {
                   <Link
                     to="/cart"
                     className="buy-now-link">
-                    <button className="buy-now-button">MUA NGAY</button>
+                    <button
+                      className="buy-now-button"
+                      onClick={addToCartHandler}>
+                      MUA NGAY
+                    </button>
                   </Link>
                   <button
                     className="add-to-cart-button"
